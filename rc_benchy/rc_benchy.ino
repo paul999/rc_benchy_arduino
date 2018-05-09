@@ -6,9 +6,9 @@
 #define ORANGE_LIGHT_FLAG_FLAG 2
 
 #define GREEN_LIGHT 12
-#define RED_LIGHT 11
+#define RED_LIGHT 9
 #define WHITE_NAV_LIGHT 10
-#define WHITE_LIGHT 9
+#define WHITE_LIGHT 11
 #define ORANGE_LIGHT 8
 
 // holds the update flags defined above
@@ -56,7 +56,7 @@ void loop()
   if(bUpdateFlagsShared)
   {
     digitalWrite(LED_BUILTIN, HIGH);
-    Serial.println("Detected change"); // Do the serial write outside the "NoInterupt" section
+    //Serial.println("Detected change"); // Do the serial write outside the "NoInterupt" section
     
     noInterrupts(); 
     pulse_time =millis() ;
@@ -80,6 +80,7 @@ void loop()
   if(bUpdateFlags & MAIN_LIGHT_FLAG)
   {
     if (mainLightIn < 1250) {
+      Serial.println("Main < 1250");
       // All lights off
       digitalWrite(GREEN_LIGHT, LOW);
       digitalWrite(RED_LIGHT, LOW);
@@ -88,6 +89,7 @@ void loop()
     }
     else if (mainLightIn >= 1250 && mainLightIn <= 1750) 
     {
+      Serial.println("Main middle");
       // Only nav lights on
       digitalWrite(GREEN_LIGHT, HIGH);
       digitalWrite(RED_LIGHT, HIGH);
@@ -96,12 +98,14 @@ void loop()
     }
     else if (mainLightIn > 1750 && mainLightIn <= 2250) 
     {
+      Serial.println("Main > 1750 < 2250");
       digitalWrite(GREEN_LIGHT, HIGH);
       digitalWrite(RED_LIGHT, HIGH);
       digitalWrite(WHITE_NAV_LIGHT, HIGH);
       digitalWrite(WHITE_LIGHT, HIGH);
     }
     else {
+      Serial.println("Wrong?");
       // Something went wrong? 
       // Value should be between 1000 & 2000 
       // but it wasn't :(
@@ -117,9 +121,11 @@ void loop()
   if(bUpdateFlags & ORANGE_LIGHT_FLAG_FLAG)
   {
     if (orangeLightIn <= 1500) {
+      Serial.println("Orange off");
       digitalWrite(ORANGE_LIGHT, LOW);
     }
     else {
+      Serial.println("Orange on");
       digitalWrite(ORANGE_LIGHT, HIGH);
     }
   }
